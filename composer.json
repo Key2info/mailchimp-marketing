@@ -1,0 +1,29 @@
+{
+    "name": "key2info/mailchimp-marketing",
+    "description": "Marketing integration for Mailchimp",
+    "type": "wordpress-plugin",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "De Belser Arne",
+            "email": "arne@bruno-agency.be"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/Key2info/mailchimp-marketing-client"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "ADB\\MailchimpMarketing\\": "src/",
+            "ADB\\MailchimpMarketingClient\\": "client/src/"
+        }
+    },
+    "require": {
+        "adb/mailchimp-marketing-client": "dev-main",
+        "mhcg/monolog-wp-cli": "^1.0.1",
+        "monolog/monolog": "^1.0"
+    }
+}

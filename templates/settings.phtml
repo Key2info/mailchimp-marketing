@@ -1,0 +1,70 @@
+<?php
+
+use ADB\MailchimpMarketing\Admin\Settings;
+use ADB\MailchimpMarketing\Plugin;
+
+$tab = $_GET['tab'] ?? 'settings';
+$page = esc_attr(Settings::PAGE_SLUG);
+?>
+<div class="wrap">
+    <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
+
+    <nav class="nav-tab-wrapper">
+        <a href="?page=<?= $page ?>&tab=settings" class="nav-tab <?= ($tab === 'settings') ? 'nav-tab-active' : '' ?>">
+            <?= __('Settings', 'adb-mailchimp-marketing') ?>
+        </a>
+        <a href="?page=<?= $page ?>&tab=info" class="nav-tab <?= ($tab === 'info') ? 'nav-tab-active' : '' ?>">
+            <?= __('Information', 'adb-mailchimp-marketing') ?>
+        </a>
+    </nav>
+
+    <div class="tab-content">
+        <?php if ('settings' === $tab) : ?>
+            <form action="options.php" method="post">
+                <?php
+                settings_fields(Settings::PAGE_SLUG);
+                do_settings_sections(Settings::PAGE_SLUG);
+                submit_button(__('Save'));
+                ?>
+            </form>
+        <?php elseif ('info' === $tab) : ?>
+            <h2><?= __('Information', 'adb-mailchimp-marketing') ?></h2>
+            <table class="form-table" role="presentation">
+                <?php if (!empty($last_runs['import'])) : ?>
+                    <tr class="wporg_row">
+                        <th scope="row"><?= __('Last imported', 'adb-mailchimp-marketing') ?></th>
+                        <td><?= DateTimeImmutable::createFromFormat('U', $last_runs['import'], Plugin::getTimeZone())->format(get_option('date_format') . ' ' . get_option('time_format')) ?></td>
+                    </tr>
+                <?php endif; ?>
+                <?php if (!empty($last_runs['sync'])) : ?>
+                    <tr class="wporg_row">
+                        <th scope="row"><?= __('Last synchronized', 'adb-mailchimp-marketing') ?></th>
+                        <td><?= DateTimeImmutable::createFromFormat('U', $last_runs['sync'], Plugin::getTimeZone())->format(get_option('date_format') . ' ' . get_option('time_format')) ?></td>
+                    </tr>
+                <?php endif; ?>
+            </table>
+            <h2><?= __('Logs', 'adb-mailchimp-marketing') ?></h2>
+            <?php if (!empty($log_files)) : ?>
+                <ul>
+                    <?php foreach ($log_files as $log_file) : ?>
+                        <li><a href="?page=<?= $page ?>&tab=info&log_file=<?= esc_attr($log_file) ?>"><?= esc_html($log_file) ?></a></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+            <?php if (!empty($log_file_content)) : ?>
+                <style>
+                    .mma-log-file {
+                        max-height: 400px;
+                        overflow: auto;
+                        background: #ddd;
+                        padding: 5px;
+                    }
+                </style>
+                <h3><?= esc_html($selected_log_file) ?></h3>
+                <div class="mma-log-file">
+                    <pre class="code"><?= $log_file_content ?></pre>
+                </div>
+            <?php endif; ?>
+        <?php endif; ?>
+    </div>
+</div>

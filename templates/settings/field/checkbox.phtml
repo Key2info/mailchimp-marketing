@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @var array $atts
+ */
+?>
+<label>
+    <input name="<?= $atts['name'] ?>" id="<?= $args['label_for'] ?>" type="<?= $atts['type'] ?? 'checkbox' ?>" class="<?= $atts['class'] ?? '' ?>" value="1" placeholder="<?= $atts['placeholder'] ?? '' ?>" <?php checked('1', $atts['value']) ?> />
+    <?php if (isset($label)) : ?>
+        <span class="checkbox-label"><?= esc_html($label) ?></span>
+    <?php endif; ?>
+</label>
+
+<?php if (isset($description)) : ?>
+    <p class="description"><?= esc_html($description) ?></p>
+<?php endif; ?>

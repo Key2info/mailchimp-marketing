@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * @var int $id
+ */
+?>
+<p id="<?php echo esc_attr($id); ?>">
+    <?php esc_html_e('Manage testing settings for the Mailchimp API here.', 'adb-mailchimp-marketing'); ?>
+    <?php printf(
+        __('Test and debug mode can be enabled using the <code>%s</code> and <code>%s</code> constants in <code>wp-config.php</code>.', 'adb-mailchimp-marketing'),
+        'MMA_TEST_MODE',
+        'MMA_DEBUG'
+    ); ?>
+</p>
