@@ -17,9 +17,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use ADB\MailchimpMarketing\Plugin;
 
-if (!function_exists('dd')) {
-	function dd($message)
-	{
+if (!function_exists('dd')) { {
 		echo '<pre>';
 		var_dump($message);
 		echo '</pre>';

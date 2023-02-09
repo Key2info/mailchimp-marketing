@@ -24,7 +24,7 @@ abstract class MailchimpCommand implements LoggerAwareInterface
     public function __construct()
     {
         $this->setLogger(Plugin::getLogger());
-        $this->configuration = Plugin::initConfiguration();
+        // $this->configuration = Plugin::initConfiguration();
         $this->startDate = new DateTimeImmutable('now', Plugin::getTimeZone());
     }
 

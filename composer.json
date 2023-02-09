@@ -24,6 +24,10 @@
     "require": {
         "adb/mailchimp-marketing-client": "dev-main",
         "mhcg/monolog-wp-cli": "^1.0.1",
-        "monolog/monolog": "^1.0"
+        "monolog/monolog": "^1.0",
+        "mailchimp/marketing": "^3.0"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^6.2"
     }
 }

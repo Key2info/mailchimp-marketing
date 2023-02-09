@@ -2,15 +2,16 @@
 
 namespace ADB\MailchimpMarketing\Command;
 
-use ADB\MailchimpMarketing\Api\CampaignApi;
 use ADB\MailchimpMarketing\Command\MailchimpCommand;
+use ADB\MailchimpMarketing\Plugin;
+use ADB\MailchimpMarketingClient\Api\CampaignApi;
 
 class Campaign extends MailchimpCommand
 {
     public const COMMAND_NAME = 'mma campaign';
 
     /**
-     * Import campaigns from Mailchimp API.
+     * Get multiple campaigns from Mailchimp API.
      *
      * ## OPTIONS
      *
@@ -22,16 +23,36 @@ class Campaign extends MailchimpCommand
      */
     public function list(array $args = [])
     {
-        $campaignApi = new CampaignApi();
-        $campaignApi->setLogger($this->logger);
+        $client = Plugin::$mailchimpClient;
 
-        $campaigns = [];
+        $campaigns = $client->campaigns->list();
 
-        foreach ($campaignApi->get() as $campaign) {
-            $campaigns[] = $campaign;
-        }
+        file_put_contents("campaigns.json", json_encode($campaigns));
 
-        echo $this->configuration->getSerializer()->serialize($campaigns, 'csv');
+        echo json_encode($campaigns);
         \WP_CLI::success('Done processing campaigns.');
+    }
+
+    /**
+     * Get single campaign from Mailchimp API.
+     *
+     * ## OPTIONS
+     *
+     * ## EXAMPLES
+     *
+     *     wp mma campaign get
+     *
+     * @when after_wp_load
+     */
+    public function get(array $args = [])
+    {
+        $client = Plugin::$mailchimpClient;
+
+        $campaign = $client->campaigns->get($args[0]); // args here is campagin ID
+
+        file_put_contents("single-campaign.json", json_encode($campaign));
+
+        echo json_encode($campaign);
+        \WP_CLI::success('Done processing single campaign.');
     }
 }

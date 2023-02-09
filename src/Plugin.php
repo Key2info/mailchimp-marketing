@@ -2,13 +2,15 @@
 
 namespace ADB\MailchimpMarketing;
 
+use ADB\MailchimpMarketing\Admin\Endpoint;
 use ADB\MailchimpMarketing\Admin\Settings;
 use ADB\MailchimpMarketing\Command\CommandHandler;
 use ADB\MailchimpMarketing\Exception\SynchronisationException;
-use ADB\MailchimpMarketingClient\Configuration;
+use MailchimpMarketing\ApiClient;
 use MHCG\Monolog\Handler\WPCLIHandler;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 
 class Plugin
 {
@@ -24,9 +26,19 @@ class Plugin
     private static $logger;
     /** @var array */
     private $modules = [];
+    public static $mailchimpClient;
 
     public function __construct()
     {
+        static::$mailchimpClient = new ApiClient();
+
+        ['token' => $token] = self::getCredentials();
+
+        static::$mailchimpClient->setConfig([
+            'apiKey' => $token,
+            'server' => Plugin::getServer($token),
+        ]);
+
         add_action('plugins_loaded', [$this, 'initModules']);
     }
 
@@ -96,17 +108,21 @@ class Plugin
         return defined('SFT_DEBUG') && MMA_DEBUG === true;
     }
 
-    public static function initConfiguration(): Configuration
+    // public static function initConfiguration()
+    // {
+    //     $configuration = Configuration::getDefaultConfiguration();
+    //     $configuration->setApiToken($token);
+    //     $configuration->setAccountId($accountId);
+    //     $configuration->setDebug($debug);
+
+    //     Configuration::setDefaultConfiguration($configuration);
+
+    //     return $configuration;
+    // }
+
+    public static function getServer($token)
     {
-        $debug = defined('SFT_DEBUG_API') && MMA_DEBUG_API === true;
-        ['token' => $token, 'accountId' => $accountId] = self::getCredentials();
-        $configuration = Configuration::getDefaultConfiguration();
-        $configuration->setApiToken($token);
-        $configuration->setDebug($debug);
-
-        Configuration::setDefaultConfiguration($configuration);
-
-        return $configuration;
+        return end(explode('-', $token));
     }
 
     public static function getLogger()
@@ -181,6 +197,7 @@ class Plugin
         static $modules = [
             CommandHandler::class,
             Settings::class,
+            Endpoint::class,
         ];
 
         $this->modules = array_map(
