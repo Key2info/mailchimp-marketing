@@ -67,6 +67,28 @@ class Settings
             ]
         );
 
+        add_settings_field(
+            'api_token_transactional',
+            __('API Token Transactional', 'adb-mailchimp-marketing'),
+            static function ($args) {
+                echo Plugin::render('settings/field/input', [
+                    'atts' => [
+                        'type' => 'password',
+                        'name' => static::getOptionName('api_token_transactional'),
+                        'value' => static::getOptionValue('api_token_transactional'),
+                    ],
+                    'args' => $args,
+                    'description' => __('The access token used to authenticate with the Mandrill API.', 'adb-mailchimp-marketing'),
+                ]);
+            },
+            self::PAGE_SLUG,
+            'mma_api_creds',
+            [
+                'class' => 'wporg_row',
+                'label_for' => 'api_token_transactional',
+            ]
+        );
+
         add_settings_section(
             'mma_test_api_creds',
             __('API Test Credentials', 'adb-mailchimp-marketing'),
@@ -75,8 +97,6 @@ class Settings
             },
             self::PAGE_SLUG
         );
-
-
 
         add_settings_field(
             'test_api_token',
@@ -107,10 +127,9 @@ class Settings
             get_option(self::OPTION_NAME),
             [
                 'api_token' => '',
-                'api_account_id' => '',
+                'api_token_transactional' => '',
                 'test_api_token' => '',
-                'test_api_account_id' => '',
-                'reservations_enabled' => '0',
+                'test_api_token_transactional' => '',
             ]
         );
     }

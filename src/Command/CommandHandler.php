@@ -3,6 +3,7 @@
 namespace ADB\MailchimpMarketing\Command;
 
 use ADB\MailchimpMarketing\Command\Campaign;
+use ADB\MailchimpMarketing\Command\RepairService;
 
 class CommandHandler
 {
@@ -17,6 +18,7 @@ class CommandHandler
                 },
                 [
                     Campaign::class,
+                    RepairService::class,
                 ]
             );
         }

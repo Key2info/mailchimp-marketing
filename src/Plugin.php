@@ -7,6 +7,7 @@ use ADB\MailchimpMarketing\Admin\Settings;
 use ADB\MailchimpMarketing\Command\CommandHandler;
 use ADB\MailchimpMarketing\Exception\SynchronisationException;
 use MailchimpMarketing\ApiClient;
+use MailchimpTransactional\ApiClient as TransactionalApi;
 use MHCG\Monolog\Handler\WPCLIHandler;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;
@@ -27,17 +28,21 @@ class Plugin
     /** @var array */
     private $modules = [];
     public static $mailchimpClient;
+    public static $mailchimpTransactionalClient;
 
     public function __construct()
     {
         static::$mailchimpClient = new ApiClient();
+        static::$mailchimpTransactionalClient = new TransactionalApi();
 
-        ['token' => $token] = self::getCredentials();
+        ['token' => $token, 'token_transactional' => $tokenTransactional] = self::getCredentials();
 
         static::$mailchimpClient->setConfig([
             'apiKey' => $token,
             'server' => Plugin::getServer($token),
         ]);
+
+        static::$mailchimpTransactionalClient->setApiKey($tokenTransactional);
 
         add_action('plugins_loaded', [$this, 'initModules']);
     }
@@ -84,14 +89,17 @@ class Plugin
     {
         if (!isset(static::$credentials)) {
             $token = Settings::getSetting(static::isTestMode() ? 'test_api_token' : 'api_token');
-            //$accountId = Settings::getSetting(static::isTestMode() ? 'test_api_account_id' : 'api_account_id');
+            $tokenTransactional = Settings::getSetting(static::isTestMode() ? 'test_api_token_transactional' : 'api_token_transactional');
 
+            /*
             if (empty($token)) {
                 throw new SynchronisationException('No api token provided.');
             }
+            */
 
             static::$credentials = [
                 'token' => $token,
+                'token_transactional' => $tokenTransactional,
             ];
         }
 
@@ -107,18 +115,6 @@ class Plugin
     {
         return defined('SFT_DEBUG') && MMA_DEBUG === true;
     }
-
-    // public static function initConfiguration()
-    // {
-    //     $configuration = Configuration::getDefaultConfiguration();
-    //     $configuration->setApiToken($token);
-    //     $configuration->setAccountId($accountId);
-    //     $configuration->setDebug($debug);
-
-    //     Configuration::setDefaultConfiguration($configuration);
-
-    //     return $configuration;
-    // }
 
     public static function getServer($token)
     {
