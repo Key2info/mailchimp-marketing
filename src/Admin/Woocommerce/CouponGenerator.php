@@ -3,10 +3,13 @@
 namespace ADB\MailchimpMarketing\Admin\Woocommerce;
 
 use ADB\MailchimpMarketing\Admin\Woocommerce\Contracts\CouponGeneratorContract;
+use ADB\MailchimpMarketing\Plugin;
 use Exception;
 
 class CouponGenerator implements CouponGeneratorContract
 {
+    public $logger;
+
     public $code;
 
     public $amount;
@@ -17,15 +20,29 @@ class CouponGenerator implements CouponGeneratorContract
 
     public $usageLimit;
 
-    public function generateCoupon(): void
+    public function __construct()
+    {
+        $this->logger = Plugin::getLogger();
+    }
+
+    public function generateCoupon()
     {
         $this->code = self::_random(16);
 
         $this->createCouponCode();
+
+        return $this->code;
     }
 
-    public function createCouponCode(): void
+    public function createCouponCode()
     {
+        $this->logger->debug("Generating new coupon code");
+        $this->logger->debug("Code {$this->code}");
+        $this->logger->debug("Amount {$this->amount}");
+        $this->logger->debug("Discount Type {$this->discountType}");
+        $this->logger->debug("Individual Use {$this->individualUse}");
+        $this->logger->debug("Usage Limit {$this->usageLimit}");
+
         try {
             $coupon = new \WC_Coupon();
             $coupon->set_code($this->code);
@@ -34,8 +51,9 @@ class CouponGenerator implements CouponGeneratorContract
             $coupon->set_individual_use($this->individualUse);
             $coupon->set_usage_limit($this->usageLimit);
             $coupon->save();
+            $this->logger->debug("Coupon code generated succesfully");
         } catch (Exception $e) {
-            throw new Exception("Something went wrong when creating the coupon: " . $this->code . " Coupon might already exist");
+            $this->logger->debug("Something went wrong when creating the coupon: " . $this->code . " Coupon might already exist");
         }
     }
 

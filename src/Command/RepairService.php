@@ -22,10 +22,9 @@ class RepairService extends MailchimpCommand
      */
     public function sendMail(array $args = [])
     {
-        \WP_CLI::success('Doing action');
+        \WP_CLI::success('Preparingg email action');
         $client = Plugin::$mailchimpTransactionalClient;
 
-        /*
         global $wpdb;
 
         $results = $wpdb->get_results("
@@ -38,27 +37,21 @@ class RepairService extends MailchimpCommand
             AND oim.meta_value = 'basic-deal'
         ");
 
-        if ($results) {
-            foreach ($results as $result) {
-                $order_id = $result->order_id;
-                $order_date = $result->order_date;
-                // doe iets met de order_id en order_date
-            }
-        } else {
-            // geen resultaten gevonden
-        }
-        */
+        $firstResult = $results[0];
+
+        $order = wc_get_order($firstResult->order_id);
+
+        $content = '<div class="mcnTextContent" style="min-width: 100%; padding: 18px;">';
+        $content .= 'Toestel: ' . $firstResult->order_item_name . '<br />';
+        $content .= 'Aangekocht op: ' . $firstResult->post_date;
+        $content .= '</div>';
 
         $response = $client->messages->sendTemplate([
-            "template_name" => "testtemplate",
+            "template_name" => "test-onderhoud",
             "template_content" => [
                 [
-                    "name" => "header",
-                    "content" => "<h2>Arne</h2>"
-                ],
-                [
                     "name" => "main",
-                    "content" => "TestTest"
+                    "content" => $content,
                 ]
             ],
             "message" => [
@@ -70,11 +63,7 @@ class RepairService extends MailchimpCommand
             ],
         ]);
 
-        dd($response);
-
-        file_put_contents("reponse.json", json_encode($response));
-
         echo json_encode($response);
-        \WP_CLI::success('Finishing action');
+        \WP_CLI::success('Email sent');
     }
 }

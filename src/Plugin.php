@@ -5,29 +5,26 @@ namespace ADB\MailchimpMarketing;
 use ADB\MailchimpMarketing\Admin\Endpoint;
 use ADB\MailchimpMarketing\Admin\Settings;
 use ADB\MailchimpMarketing\Command\CommandHandler;
-use ADB\MailchimpMarketing\Exception\SynchronisationException;
 use MailchimpMarketing\ApiClient;
 use MailchimpTransactional\ApiClient as TransactionalApi;
 use MHCG\Monolog\Handler\WPCLIHandler;
-use Monolog\Handler\RotatingFileHandler;
+use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-use Psr\Log\LoggerInterface;
 
 class Plugin
 {
     public const TIME_ZONE = 'Europe/Brussels';
 
-    /**
-     * Amount of log files to keep.
-     */
     private const LOG_MAX_AMOUNT = 7;
-    /** @var array */
+
     private static $credentials;
-    /** @var LoggerInterface|null  */
+
     private static $logger;
-    /** @var array */
+
     private $modules = [];
+
     public static $mailchimpClient;
+
     public static $mailchimpTransactionalClient;
 
     public function __construct()
@@ -151,7 +148,7 @@ class Plugin
         // Log to stdout or log file
         $handler = defined('WP_CLI') && WP_CLI && (!is_array($argv) || !in_array('--quiet', $argv, true))
             ? new WPCLIHandler($logLevel)
-            : new RotatingFileHandler(static::getLogFileLocation() . '/mailchimp-marketing.log', static::LOG_MAX_AMOUNT, $logLevel);
+            : new StreamHandler(static::getLogFileLocation() . '/mailchimp-marketing.log', static::LOG_MAX_AMOUNT, $logLevel);
 
         static::$logger->pushHandler($handler);
     }
@@ -161,7 +158,7 @@ class Plugin
      */
     private static function getLogFileLocation()
     {
-        return WP_CONTENT_DIR . '/mailchimp-marketing';
+        return WP_CONTENT_DIR . '/plugins/mailchimp-marketing/logs';
     }
 
     public static function getLogFiles()
