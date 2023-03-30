@@ -37,10 +37,11 @@ class Endpoint
 
         $this->validateRequest();
 
-<<<<<<< HEAD
-        $parameters = json_decode($request->get_body());
+        $this->request = $request;
 
-        (new CouponGenerator)
+        $parameters = json_decode($this->request->get_body());
+
+        $couponCode = (new CouponGenerator)
             ->setAmount($parameters->amount)
             ->setDiscountType($parameters->discount_type)
             ->setIndividualUse($parameters->individual_use)
@@ -49,18 +50,11 @@ class Endpoint
             ->setEmail($parameters->email)
             ->setCreationalType($parameters->creational_type)
             ->setExtras($parameters->extras)
-=======
-        $this->request = $request;
-
-        $couponCode = (new CouponGenerator)
-            ->setAmount(10)
-            ->setDiscountType('percent')
-            ->setIndividualUse(true)
-            ->setUsageLimit(1)
->>>>>>> 75770d9e856f83ac3698e59a85e2b28dde39f5c5
             ->generateCoupon();
 
         $this->sendCodeToMailchimp($couponCode);
+
+        return 'Coupon created';
     }
 
     public function sendCodeToMailchimp($couponCode)

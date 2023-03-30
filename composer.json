@@ -21,8 +21,13 @@
             "ADB\\MailchimpMarketingClient\\": "client/src/"
         }
     },
+    "config": {
+        "platform": {
+            "php": "7.4.0",
+            "platform-check": false
+        }
+    },
     "require": {
-        "adb/mailchimp-marketing-client": "dev-main",
         "mhcg/monolog-wp-cli": "^1.0.1",
         "monolog/monolog": "^1.27",
         "mailchimp/marketing": "^3.0",

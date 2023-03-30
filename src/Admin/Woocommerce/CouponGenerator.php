@@ -3,11 +3,8 @@
 namespace ADB\MailchimpMarketing\Admin\Woocommerce;
 
 use ADB\MailchimpMarketing\Admin\Woocommerce\Contracts\CouponGeneratorContract;
-<<<<<<< HEAD
 use ADB\MailchimpMarketing\Admin\Woocommerce\WC_Coupon_Custom;
-=======
 use ADB\MailchimpMarketing\Plugin;
->>>>>>> 75770d9e856f83ac3698e59a85e2b28dde39f5c5
 use Exception;
 
 class CouponGenerator implements CouponGeneratorContract
@@ -24,7 +21,6 @@ class CouponGenerator implements CouponGeneratorContract
 
     public $usageLimit;
 
-<<<<<<< HEAD
     public $daysTillExpiration;
 
     public $email;
@@ -33,15 +29,12 @@ class CouponGenerator implements CouponGeneratorContract
 
     public $extras;
 
-    public function generateCoupon(): void
-=======
     public function __construct()
     {
         $this->logger = Plugin::getLogger();
     }
 
     public function generateCoupon()
->>>>>>> 75770d9e856f83ac3698e59a85e2b28dde39f5c5
     {
         $this->code = self::_random(16);
 

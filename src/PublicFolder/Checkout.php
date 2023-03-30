@@ -1,6 +1,6 @@
 <?php
 
-namespace ADB\MailchimpMarketing\Public;
+namespace ADB\MailchimpMarketing\PublicFolder;
 
 use ADB\MailchimpMarketing\Plugin;
 

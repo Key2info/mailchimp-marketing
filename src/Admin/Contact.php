@@ -3,7 +3,6 @@
 namespace ADB\MailchimpMarketing\Admin;
 
 use ADB\MailchimpMarketing\Plugin;
-use League\Container\Container;
 
 class Contact
 {

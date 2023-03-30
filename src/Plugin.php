@@ -8,11 +8,7 @@ use ADB\MailchimpMarketing\Admin\Settings;
 use ADB\MailchimpMarketing\Admin\Woocommerce\CouponOverview;
 use ADB\MailchimpMarketing\Admin\Woocommerce\CouponSingle;
 use ADB\MailchimpMarketing\Command\CommandHandler;
-<<<<<<< HEAD
-use ADB\MailchimpMarketing\Exception\SynchronisationException;
-use ADB\MailchimpMarketing\Public\Checkout;
-=======
->>>>>>> 75770d9e856f83ac3698e59a85e2b28dde39f5c5
+use ADB\MailchimpMarketing\PublicFolder\Checkout;
 use MailchimpMarketing\ApiClient;
 use MailchimpTransactional\ApiClient as TransactionalApi;
 use MHCG\Monolog\Handler\WPCLIHandler;
