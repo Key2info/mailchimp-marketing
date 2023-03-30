@@ -8,40 +8,46 @@ use ADB\MailchimpMarketing\Admin\Settings;
 use ADB\MailchimpMarketing\Admin\Woocommerce\CouponOverview;
 use ADB\MailchimpMarketing\Admin\Woocommerce\CouponSingle;
 use ADB\MailchimpMarketing\Command\CommandHandler;
+<<<<<<< HEAD
 use ADB\MailchimpMarketing\Exception\SynchronisationException;
 use ADB\MailchimpMarketing\Public\Checkout;
+=======
+>>>>>>> 75770d9e856f83ac3698e59a85e2b28dde39f5c5
 use MailchimpMarketing\ApiClient;
+use MailchimpTransactional\ApiClient as TransactionalApi;
 use MHCG\Monolog\Handler\WPCLIHandler;
-use Monolog\Handler\RotatingFileHandler;
+use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-use Psr\Log\LoggerInterface;
 
 class Plugin
 {
     public const TIME_ZONE = 'Europe/Brussels';
 
-    /**
-     * Amount of log files to keep.
-     */
     private const LOG_MAX_AMOUNT = 7;
-    /** @var array */
+
     private static $credentials;
-    /** @var LoggerInterface|null  */
+
     private static $logger;
-    /** @var array */
+
     private $modules = [];
+
     public static $mailchimpClient;
+
+    public static $mailchimpTransactionalClient;
 
     public function __construct()
     {
         static::$mailchimpClient = new ApiClient();
+        static::$mailchimpTransactionalClient = new TransactionalApi();
 
-        ['token' => $token] = self::getCredentials();
+        ['token' => $token, 'token_transactional' => $tokenTransactional] = self::getCredentials();
 
         static::$mailchimpClient->setConfig([
             'apiKey' => $token,
             'server' => Plugin::getServer($token),
         ]);
+
+        static::$mailchimpTransactionalClient->setApiKey($tokenTransactional);
 
         add_action('plugins_loaded', [$this, 'initModules']);
     }
@@ -88,14 +94,17 @@ class Plugin
     {
         if (!isset(static::$credentials)) {
             $token = Settings::getSetting(static::isTestMode() ? 'test_api_token' : 'api_token');
-            //$accountId = Settings::getSetting(static::isTestMode() ? 'test_api_account_id' : 'api_account_id');
+            $tokenTransactional = Settings::getSetting(static::isTestMode() ? 'test_api_token_transactional' : 'api_token_transactional');
 
+            /*
             if (empty($token)) {
                 throw new SynchronisationException('No api token provided.');
             }
+            */
 
             static::$credentials = [
                 'token' => $token,
+                'token_transactional' => $tokenTransactional,
             ];
         }
 
@@ -111,18 +120,6 @@ class Plugin
     {
         return defined('SFT_DEBUG') && MMA_DEBUG === true;
     }
-
-    // public static function initConfiguration()
-    // {
-    //     $configuration = Configuration::getDefaultConfiguration();
-    //     $configuration->setApiToken($token);
-    //     $configuration->setAccountId($accountId);
-    //     $configuration->setDebug($debug);
-
-    //     Configuration::setDefaultConfiguration($configuration);
-
-    //     return $configuration;
-    // }
 
     public static function getServer($token)
     {
@@ -159,7 +156,7 @@ class Plugin
         // Log to stdout or log file
         $handler = defined('WP_CLI') && WP_CLI && (!is_array($argv) || !in_array('--quiet', $argv, true))
             ? new WPCLIHandler($logLevel)
-            : new RotatingFileHandler(static::getLogFileLocation() . '/mailchimp-marketing.log', static::LOG_MAX_AMOUNT, $logLevel);
+            : new StreamHandler(static::getLogFileLocation() . '/mailchimp-marketing.log', static::LOG_MAX_AMOUNT, $logLevel);
 
         static::$logger->pushHandler($handler);
     }
@@ -169,7 +166,7 @@ class Plugin
      */
     private static function getLogFileLocation()
     {
-        return WP_CONTENT_DIR . '/mailchimp-marketing';
+        return WP_CONTENT_DIR . '/plugins/mailchimp-marketing/logs';
     }
 
     public static function getLogFiles()

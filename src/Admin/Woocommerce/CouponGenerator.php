@@ -3,11 +3,17 @@
 namespace ADB\MailchimpMarketing\Admin\Woocommerce;
 
 use ADB\MailchimpMarketing\Admin\Woocommerce\Contracts\CouponGeneratorContract;
+<<<<<<< HEAD
 use ADB\MailchimpMarketing\Admin\Woocommerce\WC_Coupon_Custom;
+=======
+use ADB\MailchimpMarketing\Plugin;
+>>>>>>> 75770d9e856f83ac3698e59a85e2b28dde39f5c5
 use Exception;
 
 class CouponGenerator implements CouponGeneratorContract
 {
+    public $logger;
+
     public $code;
 
     public $amount;
@@ -18,6 +24,7 @@ class CouponGenerator implements CouponGeneratorContract
 
     public $usageLimit;
 
+<<<<<<< HEAD
     public $daysTillExpiration;
 
     public $email;
@@ -27,14 +34,31 @@ class CouponGenerator implements CouponGeneratorContract
     public $extras;
 
     public function generateCoupon(): void
+=======
+    public function __construct()
+    {
+        $this->logger = Plugin::getLogger();
+    }
+
+    public function generateCoupon()
+>>>>>>> 75770d9e856f83ac3698e59a85e2b28dde39f5c5
     {
         $this->code = self::_random(16);
 
         $this->createCouponCode();
+
+        return $this->code;
     }
 
-    public function createCouponCode(): void
+    public function createCouponCode()
     {
+        $this->logger->debug("Generating new coupon code");
+        $this->logger->debug("Code {$this->code}");
+        $this->logger->debug("Amount {$this->amount}");
+        $this->logger->debug("Discount Type {$this->discountType}");
+        $this->logger->debug("Individual Use {$this->individualUse}");
+        $this->logger->debug("Usage Limit {$this->usageLimit}");
+
         try {
             $coupon = new WC_Coupon_Custom();
             $coupon->set_code($this->code);
@@ -47,8 +71,9 @@ class CouponGenerator implements CouponGeneratorContract
             $coupon->set_creational_type($this->creationalType);
             $coupon->set_extras($this->extras);
             $coupon->save();
+            $this->logger->debug("Coupon code generated succesfully");
         } catch (Exception $e) {
-            throw new Exception("Something went wrong when creating the coupon: " . $this->code . " Coupon might already exist");
+            $this->logger->debug("Something went wrong when creating the coupon: " . $this->code . " Coupon might already exist");
         }
     }
 

@@ -4,7 +4,7 @@ namespace ADB\MailchimpMarketing\Admin\Woocommerce\Contracts;
 
 interface CouponGeneratorContract
 {
-    public function generateCoupon(): void;
+    public function generateCoupon();
 
-    public function createCouponCode(): void;
+    public function createCouponCode();
 }
