@@ -3,9 +3,13 @@
 namespace ADB\MailchimpMarketing;
 
 use ADB\MailchimpMarketing\Admin\Endpoint;
+use ADB\MailchimpMarketing\Admin\Order;
 use ADB\MailchimpMarketing\Admin\Settings;
+use ADB\MailchimpMarketing\Admin\Woocommerce\CouponOverview;
+use ADB\MailchimpMarketing\Admin\Woocommerce\CouponSingle;
 use ADB\MailchimpMarketing\Command\CommandHandler;
 use ADB\MailchimpMarketing\Exception\SynchronisationException;
+use ADB\MailchimpMarketing\Public\Checkout;
 use MailchimpMarketing\ApiClient;
 use MHCG\Monolog\Handler\WPCLIHandler;
 use Monolog\Handler\RotatingFileHandler;
@@ -198,6 +202,10 @@ class Plugin
             CommandHandler::class,
             Settings::class,
             Endpoint::class,
+            Checkout::class,
+            Order::class,
+            CouponOverview::class,
+            CouponSingle::class,
         ];
 
         $this->modules = array_map(

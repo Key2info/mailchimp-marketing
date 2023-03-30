@@ -38,7 +38,7 @@ class Settings
 
         add_settings_section(
             'mma_api_creds',
-            __('API Credentials', 'adb-mailchimp-marketing'),
+            __('API Credentials', 'mailchimp-marketing'),
             function ($args) {
                 echo Plugin::render('settings/credentials', $args);
             },
@@ -47,7 +47,7 @@ class Settings
 
         add_settings_field(
             'api_token',
-            __('API Token', 'adb-mailchimp-marketing'),
+            __('API Token', 'mailchimp-marketing'),
             static function ($args) {
                 echo Plugin::render('settings/field/input', [
                     'atts' => [
@@ -56,7 +56,7 @@ class Settings
                         'value' => static::getOptionValue('api_token'),
                     ],
                     'args' => $args,
-                    'description' => __('The access token used to authenticate with the Mailchimp API.', 'adb-mailchimp-marketing'),
+                    'description' => __('The access token used to authenticate with the Mailchimp API.', 'mailchimp-marketing'),
                 ]);
             },
             self::PAGE_SLUG,
@@ -69,7 +69,7 @@ class Settings
 
         add_settings_section(
             'mma_test_api_creds',
-            __('API Test Credentials', 'adb-mailchimp-marketing'),
+            __('API Test Credentials', 'mailchimp-marketing'),
             function ($args) {
                 echo Plugin::render('settings/test', $args);
             },
@@ -80,7 +80,7 @@ class Settings
 
         add_settings_field(
             'test_api_token',
-            __('API Token', 'adb-mailchimp-marketing'),
+            __('API Token', 'mailchimp-marketing'),
             static function ($args) {
                 echo Plugin::render('settings/field/input', [
                     'atts' => [
@@ -89,7 +89,7 @@ class Settings
                         'value' => static::getOptionValue('test_api_token'),
                     ],
                     'args' => $args,
-                    'description' => __('The access token used to authenticate with the test sandbox for the Mailchimp API.', 'adb-mailchimp-marketing'),
+                    'description' => __('The access token used to authenticate with the test sandbox for the Mailchimp API.', 'mailchimp-marketing'),
                 ]);
             },
             self::PAGE_SLUG,
@@ -125,8 +125,8 @@ class Settings
     protected function addMenuPage(): void
     {
         add_options_page(
-            __('Mailchimp Marketing Settings', 'adb-mailchimp-marketing'),
-            __('Mailchimp Marketing Settings', 'adb-mailchimp-marketing'),
+            __('Mailchimp Marketing Settings', 'mailchimp-marketing'),
+            __('Mailchimp Marketing Settings', 'mailchimp-marketing'),
             'manage_options',
             self::PAGE_SLUG,
             static function () {

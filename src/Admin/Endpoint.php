@@ -22,15 +22,21 @@ class Endpoint
         ));
     }
 
-    public function handleCouponGenerationRequest()
+    public function handleCouponGenerationRequest($request)
     {
         $this->validateRequest();
 
+        $parameters = json_decode($request->get_body());
+
         (new CouponGenerator)
-            ->setAmount(10)
-            ->setDiscountType('percent')
-            ->setIndividualUse(true)
-            ->setUsageLimit(1)
+            ->setAmount($parameters->amount)
+            ->setDiscountType($parameters->discount_type)
+            ->setIndividualUse($parameters->individual_use)
+            ->setUsageLimit($parameters->usage_limit)
+            ->setDaysTillExpiration($parameters->days_till_expiration)
+            ->setEmail($parameters->email)
+            ->setCreationalType($parameters->creational_type)
+            ->setExtras($parameters->extras)
             ->generateCoupon();
     }
 
