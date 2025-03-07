@@ -1,3 +1,4 @@
 /vendor
 /client
 composer.lock
+logs/mailchimp-marketing.log
