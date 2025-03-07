@@ -28,8 +28,11 @@ class Contact
             "email_address" => $email,
             'status'        => 'subscribed',
             'merge_fields' => [
-                'COUPON' => $couponCode,
+                'MMERGE4' => $couponCode, // For staging this should be MMERGE2
             ]
         ]);
+
+        $jsonResponse = json_encode($response);
+        $this->logger->debug("Coupon code: {$jsonResponse}");
     }
 }
