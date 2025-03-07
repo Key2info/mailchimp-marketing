@@ -41,6 +41,7 @@ class Endpoint
 
         $parameters = json_decode($this->request->get_body());
 
+
         $couponCode = (new CouponGenerator)
             ->setAmount($parameters->amount)
             ->setDiscountType($parameters->discount_type)
@@ -65,7 +66,7 @@ class Endpoint
         $reqBody = json_decode($this->request->get_body(), true);
 
         $email = isset($reqBody['email']) ?  $reqBody['email'] : 'riane.vancamp@key2info.be';
-        $audienceId = '2872c7dd79';
+        $audienceId = '9e8a903a36'; // 2872c7dd79 <- Test audience ID @@ 9e8a903a36 <_ Live
         $subscriber_hash = md5(strtolower(trim($email)));
 
         try {
