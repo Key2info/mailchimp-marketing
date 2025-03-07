@@ -63,6 +63,7 @@ class CouponGenerator implements CouponGeneratorContract
             $coupon->set_email($this->email);
             $coupon->set_creational_type($this->creationalType);
             $coupon->set_extras($this->extras);
+            $coupon->set_exclude_sale_items(true);
             $coupon->save();
             $this->logger->debug("Coupon code generated succesfully");
         } catch (Exception $e) {
