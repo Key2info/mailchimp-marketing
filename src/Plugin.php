@@ -114,7 +114,7 @@ class Plugin
 
     public static function isDebugMode(): bool
     {
-        return defined('SFT_DEBUG') && MMA_DEBUG === true;
+        return (defined('WP_DEBUG') && WP_DEBUG === true) || (defined('SFT_DEBUG') && MMA_DEBUG === true);
     }
 
     public static function getServer($token)
